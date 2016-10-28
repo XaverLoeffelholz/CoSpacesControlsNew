@@ -13,6 +13,7 @@ public class Handle : MonoBehaviour {
 	Plane dragPlane;
 	private Vector3 posOnDragBegin;
 	private Vector3 offsetOnDragBegin;
+	public Vector3 InitialTopToBottom;
 
 	public ObjectScript connectObject;
 
@@ -43,35 +44,25 @@ public class Handle : MonoBehaviour {
 					// check y is not below 0
 				}		
 			} else if (typeOfHandle == HandleType.ScaleUniform) {
+				
 				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
 				// ray to ground plane
 				if (dragPlane.Raycast (ray, out rayDistance)) {
-					// check distance to initial pos
-
-					// maybe add maximum
 					Vector3 newPos = Vector3.Project ((ray.GetPoint (rayDistance) + offsetOnDragBegin), connectObject.transform.position + connectObject.transform.up);
-
 					newPos = Vector3.ClampMagnitude (RasterManager.Instance.Raster (newPos), 10f);
-
-					// get current scale Top to bottom
-					Vector3 prevTopToBottom = connectObject.boundingBox.GetTopCenter() - connectObject.boundingBox.GetBottomCenter();
 
 					// get new scale Top to Bottom
 					Vector3 newTopToBottom = newPos - connectObject.boundingBox.GetBottomCenter();
 
 					// scale accordingly
-					Vector3 newScale = scaleOneBeginDrag * (newTopToBottom.magnitude/prevTopToBottom.magnitude);
-
-					Debug.Log ("new Scale" + newScale);
+					Vector3 newScale = scaleOneBeginDrag * (newTopToBottom.magnitude/InitialTopToBottom.magnitude);
 
 					connectObject.cube.transform.parent.localScale = new Vector3 (Mathf.Max (0.2f, newScale.x), Mathf.Max (0.2f, newScale.y), Mathf.Max (0.2f, newScale.z));
-
-					//connectObject.localScale = new Vector3((transform.position - connectObject.position).magnitude, (transform.position - connectObject.position).magnitude, (transform.position - connectObject.position).magnitude);
-
-					// fix code
-
 					connectObject.boundingBox.CalculateBoundingBox();
+
+					// use update bb from master thesis
+					connectObject.boundingBox.DrawBoundingBox();
 					connectObject.PlaceHandles ();
 				}
 
@@ -81,8 +72,7 @@ public class Handle : MonoBehaviour {
 	}
 
 	public void StartDragging(){
-		dragging = true;
-
+		
 		if (typeOfHandle == HandleType.translateY || typeOfHandle == HandleType.ScaleUniform) {
 			// create plane 
 
@@ -101,12 +91,16 @@ public class Handle : MonoBehaviour {
 				if (typeOfHandle == HandleType.translateY) {
 					offsetOnDragBegin = connectObject.transform.position - posOnDragBegin;
 				} else if (typeOfHandle == HandleType.ScaleUniform){
-					offsetOnDragBegin = transform.position - posOnDragBegin;
+					offsetOnDragBegin = connectObject.boundingBox.GetTopCenter() - posOnDragBegin;
 					scaleOneBeginDrag = connectObject.cube.transform.parent.localScale;
+
+					// get current scale Top to bottom
+					InitialTopToBottom = connectObject.boundingBox.GetTopCenter() - connectObject.boundingBox.GetBottomCenter();
 				}
 
 			}
 
+			dragging = true;
 		}
 	}
 
