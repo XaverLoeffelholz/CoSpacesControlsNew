@@ -46,6 +46,7 @@ public class NewBoundingBox : MonoBehaviour {
 		lines.DrawLinesWorldCoordinate(new Vector3[] {coordinatesBoundingBox[0], coordinatesBoundingBox[1], coordinatesBoundingBox[2], coordinatesBoundingBox[3]});
 		lines.DrawLinesWorldCoordinate(new Vector3[] {coordinatesBoundingBox[4], coordinatesBoundingBox[5], coordinatesBoundingBox[6], coordinatesBoundingBox[7]});
 
+		/*
 		if (coordinatesBoundingBox [4].y > 0.1f) {
 			lines.DrawLinesWorldCoordinate(new Vector3[] { new Vector3(coordinatesBoundingBox[4].x,0f,coordinatesBoundingBox[4].z), 
 				new Vector3(coordinatesBoundingBox[5].x,0f,coordinatesBoundingBox[5].z), 
@@ -63,7 +64,7 @@ public class NewBoundingBox : MonoBehaviour {
 				0.25f *  coordinatesBoundingBox[7];
 
 			lines.DrawLinesWorldCoordinate(new Vector3[] {centerBottomBB, centerBottomBBground});
-		}
+		}*/
 
 		lines.DrawLinesWorldCoordinate(new Vector3[] {coordinatesBoundingBox[0], coordinatesBoundingBox[4]});
 		lines.DrawLinesWorldCoordinate(new Vector3[] {coordinatesBoundingBox[1], coordinatesBoundingBox[5]});

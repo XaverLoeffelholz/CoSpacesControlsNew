@@ -32,6 +32,8 @@ public class ObjectScript : MonoBehaviour {
 
 	public GameObject topHandles;
 
+	public GameObject cube;
+
 
 	public bool local = false;
 
@@ -66,6 +68,7 @@ public class ObjectScript : MonoBehaviour {
 				// maybe add maximum
 				Vector3 newPos = RasterManager.Instance.Raster(ray.GetPoint (rayDistance) + offsetOnDragBegin);
 				transform.position = Vector3.ClampMagnitude(newPos, 10f);
+
 			}		
 		}
 

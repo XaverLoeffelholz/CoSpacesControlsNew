@@ -23,9 +23,12 @@ public class ObjectController : MonoBehaviour {
 
 		if (Physics.Raycast (ray, out hit, 1000.0f)) {
 			if (hit.collider.transform.CompareTag ("Object")) {
-				currentFocusedObject = hit.collider.transform.parent.GetComponent<ObjectScript> ();
+				currentFocusedObject = hit.collider.transform.parent.parent.GetComponent<ObjectScript> ();
 				currentFocusedObject.Focus ();
 			} else if (hit.collider.transform.CompareTag ("YTranslation")) {
+				currentFocusedHandle = hit.collider.transform.parent.GetComponent<Handle> ();
+				currentFocusedHandle.Focus ();
+			} else if (hit.collider.transform.CompareTag ("UniformScaling")) {
 				currentFocusedHandle = hit.collider.transform.parent.GetComponent<Handle> ();
 				currentFocusedHandle.Focus ();
 			} else {
@@ -61,10 +64,10 @@ public class ObjectController : MonoBehaviour {
 						currentSelectedObject = null;
 					}
 				}
-
 				currentFocusedObject.Select ();
 				currentSelectedObject = currentFocusedObject;
 				currentSelectedObject.StartDragging (ray);
+
 			} else {				
 				if (currentSelectedObject != null && !currentSelectedObject.dragging && currentFocusedHandle == null) {
 					currentSelectedObject.DeSelect ();
@@ -77,10 +80,12 @@ public class ObjectController : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0)){
 			if (currentSelectedObject != null) {
 				currentSelectedObject.StopDragging ();
+
 			}
 
 			if (currentDraggedHandle != null){
 				currentDraggedHandle.StopDragging ();
+				currentDraggedHandle = null;
 			}
 		}
 
