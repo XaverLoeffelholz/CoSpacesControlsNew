@@ -234,4 +234,9 @@ public class NewBoundingBox : MonoBehaviour {
 		return idOfVertex;
 	}
 
+    public void UpdateBoundingBox()
+    {
+        // use Function from MA
+    }
+
 }

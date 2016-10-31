@@ -34,6 +34,7 @@ public class ObjectScript : MonoBehaviour {
 
 	public GameObject cube;
 
+    public GameObject[] handlesArray;
 
 	public bool local = false;
 
@@ -42,7 +43,9 @@ public class ObjectScript : MonoBehaviour {
 		groundPlane = new Plane ();
 		groundPlane.normal = Vector3.up;
 		groundPlane.distance = 0f;
-	}
+
+        handlesArray = new GameObject[] { UniformScalingHandle, YAxisHandle, NonUniformYScalingHandle, NonUniformXScalingHandleX1, NonUniformXScalingHandleX2, NonUniformZScalingHandleZ1, NonUniformZScalingHandleZ2, XRotationHandle, YRotationHandle, ZRotationHandle };
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -72,9 +75,10 @@ public class ObjectScript : MonoBehaviour {
 			}		
 		}
 
-		if (selected && !dragging) {
-			PlaceRotationControls ();
-			RescaleHandles ();
+		if (selected && !dragging && !Input.GetMouseButton(1)) {
+            PlaceHandles();
+            boundingBox.CalculateBoundingBox();
+            RescaleHandles ();
 		}
 
 	}
@@ -95,7 +99,7 @@ public class ObjectScript : MonoBehaviour {
 	public void Select(){
 		if (!selected) {
 			selected = true;
-			Handles.SetActive (true);
+			
 			boundingBox.DrawBoundingBox ();
 			PlaceHandles ();
 		}
@@ -125,8 +129,11 @@ public class ObjectScript : MonoBehaviour {
 
 
 	public void PlaceHandles(){
-		// Top center Uniform Scaling, plus Y hande plus hight
-		Vector3 topCenterBB = boundingBox.GetTopCenter();
+        boundingBox.CalculateBoundingBox();
+        Handles.SetActive(true);
+
+        // Top center Uniform Scaling, plus Y hande plus hight
+        Vector3 topCenterBB = boundingBox.GetTopCenter();
 
 		float distanceToCamera = (Camera.main.transform.position - transform.position).magnitude;
 		//Vector3 size = Vector3.one * distanceToCamera * 0.12f;
@@ -169,7 +176,6 @@ public class ObjectScript : MonoBehaviour {
 			preId = 3;
 		}
 
-		Debug.Log ("Id of closesst" + idOfClosestVertToCamera);
 		int idOfCornerOnGround = idOfClosestVertToCamera + 4;
 
 		// get next, get previous and get the one at bottom
@@ -179,7 +185,7 @@ public class ObjectScript : MonoBehaviour {
 		if (Mathf.Abs (Vector3.Dot (direction, Vector3.forward)) == 1f) {
 			ZRotationHandle.transform.position = boundingBox.coordinatesBoundingBox [preId];
 			XRotationHandle.transform.position = boundingBox.coordinatesBoundingBox [nextId];
-		} else {
+        } else {
 			XRotationHandle.transform.position = boundingBox.coordinatesBoundingBox [preId];
 			ZRotationHandle.transform.position = boundingBox.coordinatesBoundingBox [nextId];
 		}
@@ -212,5 +218,22 @@ public class ObjectScript : MonoBehaviour {
 		topHandles.transform.localScale = size;
 	}
 
+    public void HideHandlesExcept(GameObject handle)
+    {
+        for(int i=0; i < handlesArray.Length; i++)
+        {
+            if (handle != handlesArray[i])
+            {
+                handlesArray[i].SetActive(false);
+            }
+        }
+    }
 
+    public void ShowAllHandles()
+    {
+        for (int i = 0; i < handlesArray.Length; i++)
+        {
+            handlesArray[i].SetActive(true);
+        }
+    }
 }

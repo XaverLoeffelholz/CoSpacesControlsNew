@@ -31,7 +31,18 @@ public class ObjectController : MonoBehaviour {
 			} else if (hit.collider.transform.CompareTag ("UniformScaling")) {
 				currentFocusedHandle = hit.collider.transform.parent.GetComponent<Handle> ();
 				currentFocusedHandle.Focus ();
-			} else {
+            }
+            else if (hit.collider.transform.CompareTag("NonUniformScaling"))
+            {
+                currentFocusedHandle = hit.collider.transform.parent.GetComponent<Handle>();
+                currentFocusedHandle.Focus();
+            }
+            else if (hit.collider.transform.CompareTag("RotationHandle"))
+            {
+                currentFocusedHandle = hit.collider.transform.parent.GetComponent<Handle>();
+                currentFocusedHandle.Focus();
+            }
+            else {
 				if (currentFocusedObject != null) {
 					currentFocusedObject.UnFocus ();
 					currentFocusedObject = null;
@@ -80,7 +91,6 @@ public class ObjectController : MonoBehaviour {
 		if (Input.GetMouseButtonUp (0)){
 			if (currentSelectedObject != null) {
 				currentSelectedObject.StopDragging ();
-
 			}
 
 			if (currentDraggedHandle != null){
